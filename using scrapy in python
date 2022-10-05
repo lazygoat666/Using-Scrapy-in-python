@@ -1,0 +1,17 @@
+import scrapy
+
+
+class JobbankspSpider(scrapy.Spider):
+    name = 'jobbanksp'
+    allowed_domains = ['jobbank.gc.ca']
+    start_urls = ['https://www.jobbank.gc.ca/jobsearch/jobsearch?searchstring=digital+marketing&locationstring=Canada&sort=M']
+
+    def parse(self, response):
+        jobcard = response.css('div.results-jobs')
+        for job in jobcard:
+            item = {
+            'jobpsition' : job.css('span.noctitle::text').getall(),
+            'jobsalary' : job.css('li.salary::text').getall()
+            }
+            yield item
+        pass
